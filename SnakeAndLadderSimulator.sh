@@ -9,6 +9,7 @@ STARTING_POSITION=0;
 SNAKE=0;
 LADDER=1;
 NO_PLAY=2;
+WINNING_POSITION=100;
 
 #VARIABLES
 resultNumber=0;
@@ -28,15 +29,22 @@ function snakeLadderHold() {
 			playerPosition=$playerPosition
 					;;
 	esac
-	echo $playerPosition
+	echo Players Current Position = $playerPosition
 }
 
 #FUNCTION TO GENERATE ROLL DICE NUMBER
 function rollDice() {
 	resultNumber=$(( $(($RANDOM%6))+1 ))
-	echo $resultNumber
+	echo Dice Roll Result = $resultNumber
 	snakeLadderHold
 }
 
-#CALLING FUNCTION TO GET NUMBER
-rollDice
+#CALLING FUNCTION TO GET NUMBER TILL REACHES WINNING POSITION AND IF REACHES BELOW ZERO THEN AGAIN RESUMING FROM STARTING POSITION
+while [[ $playerPosition -le $WINNING_POSITION ]]
+do
+	if [[ $playerPosition -lt $STARTING_POSITION ]]
+	then
+		playerPosition=$STARTING_POSITION
+	fi
+	rollDice
+done
