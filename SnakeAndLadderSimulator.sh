@@ -15,6 +15,7 @@ WINNING_POSITION=100;
 resultNumber=0;
 playerPosition=0;
 option=0;
+rollCount=0;
 
 #FUNCTION TO GENERATE THE OPTION AND GIVE POSITION ACCORDINGLY
 function snakeLadderHold() {
@@ -32,9 +33,10 @@ function snakeLadderHold() {
 	echo Players Current Position = $playerPosition
 }
 
-#FUNCTION TO GENERATE ROLL DICE NUMBER
+#FUNCTION TO GENERATE ROLL DICE NUMBER AND COUNT OF IT
 function rollDice() {
 	resultNumber=$(( $(($RANDOM%6))+1 ))
+	((rollCount++))
 	echo Dice Roll Result = $resultNumber
 	snakeLadderHold
 }
@@ -51,3 +53,4 @@ do
 	fi
 	rollDice
 done
+echo Number Of Times Dice Rolled = $rollCount
