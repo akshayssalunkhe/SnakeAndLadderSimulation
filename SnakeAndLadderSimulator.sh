@@ -39,12 +39,15 @@ function rollDice() {
 	snakeLadderHold
 }
 
-#CALLING FUNCTION TO GET NUMBER TILL REACHES WINNING POSITION AND IF REACHES BELOW ZERO THEN AGAIN RESUMING FROM STARTING POSITION
-while [[ $playerPosition -le $WINNING_POSITION ]]
+#CALLING FUNCTION TO GET NUMBER TILL REACHES EXACT WINNING POSITION AND IF REACHES BELOW ZERO THEN AGAIN RESUMING FROM STARTING POSITION
+while [[ $playerPosition -ne $WINNING_POSITION ]]
 do
 	if [[ $playerPosition -lt $STARTING_POSITION ]]
 	then
 		playerPosition=$STARTING_POSITION
+	elif [[ $playerPosition -gt $WINNING_POSITION ]]
+	then
+		playerPosition=$(($playerPosition-$resultNumber))
 	fi
 	rollDice
 done
