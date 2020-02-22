@@ -4,7 +4,6 @@
 echo Welcome To Snake And Ladder Simulation Problem
 
 #CONSTANTS
-NUMBER_OF_PLAYER=1;
 STARTING_POSITION=0;
 SNAKE=0;
 LADDER=1;
@@ -12,45 +11,59 @@ NO_PLAY=2;
 WINNING_POSITION=100;
 
 #VARIABLES
-resultNumber=0;
-playerPosition=0;
-option=0;
-rollCount=0;
-
-#FUNCTION TO GENERATE THE OPTION AND GIVE POSITION ACCORDINGLY
-function snakeLadderHold() {
-	case $((RANDOM%3)) in
-		$SNAKE)
-			playerPosition=$(($playerPosition-$resultNumber))
-					;;
-		$LADDER)
-			playerPosition=$(($playerPosition+$resultNumber))
-					;;
-		$NO_PLAY)
-			playerPosition=$playerPosition
-					;;
-	esac
-	echo Players Current Position = $playerPosition
-}
+flag=0;
+playerOnePosition=0;
+playerTwoPosition=0;
 
 #FUNCTION TO GENERATE ROLL DICE NUMBER AND COUNT OF IT
 function rollDice() {
-	resultNumber=$(( $(($RANDOM%6))+1 ))
-	((rollCount++))
-	echo Dice Roll Result = $resultNumber
-	snakeLadderHold
+	echo "$(( $(($RANDOM%6))+1 ))"
 }
 
-#CALLING FUNCTION TO GET NUMBER TILL REACHES EXACT WINNING POSITION AND IF REACHES BELOW ZERO THEN AGAIN RESUMING FROM STARTING POSITION
-while [[ $playerPosition -ne $WINNING_POSITION ]]
-do
-	if [[ $playerPosition -lt $STARTING_POSITION ]]
+#FUNCTION TO GENERATE THE OPTION AND GIVE PLAYER POSITION ACCORDINGLY
+function snakeLadderHold() {
+	local playerPosition=$1
+	local resultNumber=0;
+	resultNumber=$(rollDice)
+	case $((RANDOM%3)) in
+		$SNAKE)
+			playerPosition=$(($playerPosition-$resultNumber))
+			if [[ $playerPosition -lt $STARTING_POSITION ]]
+			then
+				playerPosition=$STARTING_POSITION
+			fi
+				;;
+		$LADDER)
+			playerPosition=$(($playerPosition+$resultNumber))
+			if [[ $playerPosition -gt $WINNING_POSITION ]]
+			then
+				playerPosition=$(($playerPosition-$resultNumber))
+			fi
+				;;
+		$NO_PLAY)
+			playerPosition=$playerPosition
+				;;
+	esac
+	echo $playerPosition
+}
+
+#CHECKING WINNING CODITION AND UPDATING PLAYERS POSITION
+ while [[ $playerOnePosition -ne $WINNING_POSITION && $playerTwoPosition -ne $WINNING_POSITION ]]
+ do
+	if [[ flag -eq 0 ]]
 	then
-		playerPosition=$STARTING_POSITION
-	elif [[ $playerPosition -gt $WINNING_POSITION ]]
-	then
-		playerPosition=$(($playerPosition-$resultNumber))
+		playerOnePosition=$( snakeLadderHold $playerOnePosition )
+		flag=1;
+		if [[ $playerOnePosition -eq $WINNING_POSITION ]]
+		then
+			echo "CONGRATULATIONS ! PLAYER ONE WON"
+		fi
+	else
+		playerTwoPosition=$( snakeLadderHold $playerTwoPosition )
+		flag=0;
+		if [[ $playerTwoPosition -eq $WINNING_POSITION ]]
+		then
+			echo "CONGRATULATIONS ! PLAYER TWO WON"
+		fi
 	fi
-	rollDice
 done
-echo Number Of Times Dice Rolled = $rollCount
