@@ -15,7 +15,7 @@ flag=0;
 playerOnePosition=0;
 playerTwoPosition=0;
 
-#FUNCTION TO GENERATE ROLL DICE NUMBER AND COUNT OF IT
+#FUNCTION TO GENERATE ROLL DICE NUMBER
 function rollDice() {
 	echo "$(( $(($RANDOM%6))+1 ))"
 }
